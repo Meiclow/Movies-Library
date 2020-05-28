@@ -1,3 +1,5 @@
+import string
+
 import pymongo
 import names as n
 import random as r
@@ -23,13 +25,16 @@ def gen_movie_name(first_base, second_base, third_base):
 
 class User:
 
-    def __init__(self, name):
+    def __init__(self, name, password):
         self.name = name
+        self.password = password
 
     @classmethod
     def gen_user(cls):
         name = n.get_full_name()
-        return User(name)
+        size = r.randint(8, 20)
+        password = ''.join(r.choice(string.ascii_letters + string.digits) for _ in range(size))
+        return User(name, password)
 
 
 class Movie:
@@ -82,7 +87,6 @@ name_sets = [name_set1, name_set2, name_set3]
 
 client = pymongo.MongoClient("mongodb://localhost:27017")
 client.drop_database("movies_library")
-client.drop_database("MichalDronka6")
 db = client["movies_library"]
 movies_col = db["movies"]
 reviews_col = db["reviews"]
@@ -93,7 +97,7 @@ def insert_user(user: User):
     if users_col.find_one({"name": user.name}):
         print("This name is already taken")
         return None
-    return users_col.insert_one({"name": user.name}).inserted_id
+    return users_col.insert_one({"name": user.name, "password": user.password}).inserted_id
 
 
 def insert_movie(movie: Movie):
