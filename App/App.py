@@ -17,10 +17,8 @@ genres_set = ["Action", "Romance", "Horror", "Comedy", "Thriller", "Adventure", 
 def login(name, password):
     user = users_col.find_one({"name": name})
     if not user:
-        print("wrong username or password")
         return None
     if user["password"] != password:
-        print("wrong username or password")
         return None
     return user["_id"]
 
