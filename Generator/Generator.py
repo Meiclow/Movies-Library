@@ -25,7 +25,6 @@ class User:
 
     def __init__(self, name):
         self.name = name
-        self.reviews = []
 
     @classmethod
     def gen_user(cls):
@@ -35,16 +34,19 @@ class User:
 
 class Movie:
 
-    def __init__(self, name, genres):
+    def __init__(self, name, genres, director, year):
         self.name = name
         self.genres = genres
-        self.reviews = []
+        self.director = director
+        self.year = year
 
     @classmethod
     def gen_movie(cls, name_bases, genres_base):
         name = gen_movie_name(name_bases[0], name_bases[1], name_bases[2])
         genres = gen_genres(genres_base)
-        return Movie(name, genres)
+        director = n.get_full_name()
+        year = r.randint(1920, 2020)
+        return Movie(name, genres, director, year)
 
 
 class Review:
@@ -98,19 +100,16 @@ def insert_movie(movie: Movie):
     if movies_col.find_one({"name": movie.name}):
         print("Movie with this name already exists")
         return None
-    return movies_col.insert_one({"name": movie.name, "genres": movie.genres}).inserted_id
+    return movies_col.insert_one({"name": movie.name, "genres": movie.genres,
+                                  "director": movie.director, "year": movie.year}).inserted_id
 
 
 def insert_review(review: Review):
-    """
     if reviews_col.find_one({"user_id": review.user, "movie_id": review.movie}):
         print("This user already rated this movie")
         return None
-    """
     review_id = reviews_col.insert_one({"rating": review.rating, "text": review.txt,
                                         "user_id": review.user, "movie_id": review.movie}).inserted_id
-    users_col.update_one({"_id": review.user}, {"$push": {"reviews": review_id}})
-    movies_col.update_one({"_id": review.movie}, {"$push": {"reviews": review_id}})
     return review_id
 
 
