@@ -95,14 +95,12 @@ users_col = db["users"]
 
 def insert_user(user: User):
     if users_col.find_one({"name": user.name}):
-        print("This name is already taken")
         return None
     return users_col.insert_one({"name": user.name, "password": user.password}).inserted_id
 
 
 def insert_movie(movie: Movie):
     if movies_col.find_one({"name": movie.name}):
-        print("Movie with this name already exists")
         return None
     return movies_col.insert_one({"name": movie.name, "genres": movie.genres,
                                   "director": movie.director, "year": movie.year}).inserted_id
@@ -110,7 +108,6 @@ def insert_movie(movie: Movie):
 
 def insert_review(review: Review):
     if reviews_col.find_one({"user_id": review.user, "movie_id": review.movie}):
-        print("This user already rated this movie")
         return None
     review_id = reviews_col.insert_one({"rating": review.rating, "text": review.txt,
                                         "user_id": review.user, "movie_id": review.movie}).inserted_id
