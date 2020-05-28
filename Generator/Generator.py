@@ -63,15 +63,18 @@ class Review:
         return Review(rating, txt, user_id, movie_id)
 
 
-genres_set = ["Action", "Romance", "Horror", "Comedy", "Thriller", "Adventure", "Family", "Fantasy", "Thriller", "Sci-fi",
-          "History", "Document", "Parody", "Teen", "Kid", "Superheroes", "War"]
+genres_set = ["Action", "Romance", "Horror", "Comedy", "Thriller", "Adventure", "Family", "Fantasy", "Thriller",
+              "Sci-fi", "History", "Document", "Parody", "Teen", "Kid", "Superheroes", "War", "Drama", "Educational",
+              "Short", "Animated"]
 
-name_set1 = ["Great", "Big", "Scary", "Black", "White", "Holy", "Thrilling", "Vast", "White", "Imprisoned"]
+name_set1 = ["Great", "Big", "Scary", "Black", "White", "Holy", "Thrilling", "Vast", "White", "Imprisoned", "Endless",
+             "The Best", "Awful", "Tiny", "Little", "Demonic", "Sturdy"]
 
 name_set2 = [" Adventure", " City", " Person", " Castle", " Dwarf", " Elf", " Country", " Forest", " Museum",
-             " Library", "Turtle"]
+             " Library", "Turtle", " Samurai", " Detective", " Lamb", " Sorcerer", " Demon", " King"]
 
-name_set3 = [" of Endless Fun", "", " of the Dead", " with Morgan Freeman", " that never returns", ""]
+name_set3 = [" of Endless Fun", "", " of the Dead", " with Morgan Freeman", " that never returns", "", " on the Couch",
+             " - that's what she said", " or not", "", ", Real Story", "", " and the Others"]
 
 name_sets = [name_set1, name_set2, name_set3]
 
@@ -88,14 +91,14 @@ def insert_user(user: User):
     if users_col.find_one({"name": user.name}):
         print("This name is already taken")
         return None
-    return users_col.insert_one({"name": user.name})
+    return users_col.insert_one({"name": user.name}).inserted_id
 
 
 def insert_movie(movie: Movie):
     if movies_col.find_one({"name": movie.name}):
         print("Movie with this name already exists")
         return None
-    return movies_col.insert_one({"name": movie.name, "genres": movie.genres})
+    return movies_col.insert_one({"name": movie.name, "genres": movie.genres}).inserted_id
 
 
 def insert_review(review: Review):
@@ -106,11 +109,12 @@ def insert_review(review: Review):
     """
     review_id = reviews_col.insert_one({"rating": review.rating, "text": review.txt,
                                         "user_id": review.user, "movie_id": review.movie}).inserted_id
-    users_col.update({"_id": review.user}, {"$push": {"reviews": review_id}})
-    movies_col.update({"_id": review.movie}, {"$push": {"reviews": review_id}})
+    users_col.update_one({"_id": review.user}, {"$push": {"reviews": review_id}})
+    movies_col.update_one({"_id": review.movie}, {"$push": {"reviews": review_id}})
     return review_id
 
 
+r.seed()
 u_ids = []
 m_ids = []
 for i in range(100):
