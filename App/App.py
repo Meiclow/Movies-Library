@@ -27,6 +27,13 @@ def register(name, password):
     return users_col.insert_one({"name": name, "password": password}).inserted_id
 
 
+def add_movie(name, genres, director, year):
+    if movies_col.find_one({"name": name}):
+        return None
+    return movies_col.insert_one({"name": name, "genres": genres,
+                                  "director": director, "year": year}).inserted_id
+
+
 def start_box():
     choices = ["Zaloguj", "Zarejestruj", "Wyjdź"]
     choice = buttonbox("Witaj w bibliotece filmowej", title, choices)
@@ -91,7 +98,39 @@ def my_reviews_box(user_id):
 
 
 def add_movie_box(user_id):
-    print("add_movie_box")
+    name = enterbox("Nazwa filmu", title)
+    add_movie_box2(user_id, name)
+
+
+def add_movie_box2(user_id, name):
+    director = enterbox("Nazwa reżysera", title)
+    add_movie_box3(user_id, name, director)
+
+
+def add_movie_box3(user_id, name, director):
+    genres = multenterbox("Gatunki", title, ["1", "2", "3", "4", "5", "6", "7", "8"])
+    while "" in genres:
+        genres.remove("")
+    add_movie_box4(user_id, name, director, genres)
+
+
+def add_movie_box4(user_id, name, director, genres):
+    year = int(enterbox("Rok", title))
+    movie_id = add_movie(name, genres, director, year)
+    if not movie_id:
+        movie_exists_box(user_id)
+    else:
+        movie_added_box(user_id, name)
+
+
+def movie_exists_box(user_id):
+    msgbox("Film o podanej nazwie już istnieje", title)
+    menu_box(user_id)
+
+
+def movie_added_box(user_id, name):
+    msgbox("Pomyślnie dodano film " + name, title)
+    menu_box(user_id)
 
 
 start_box()
