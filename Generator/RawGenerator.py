@@ -46,7 +46,7 @@ class Movie:
 
 class Review:
 
-    def _init_(self, rating, txt):
+    def __init__(self, rating, txt):
         self.rating = rating
         self.txt = txt
         self.user = None
@@ -56,4 +56,5 @@ class Review:
     def gen_review(cls):
         faker = Faker()
         rating = r.randint(1, 5)
-        return Movie(rating, faker.text())
+        txt = faker.text()
+        return Review(rating, txt)
