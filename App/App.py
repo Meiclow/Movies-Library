@@ -9,6 +9,10 @@ reviews_col = db["reviews"]
 users_col = db["users"]
 title = "Biblioteka Filmowa"
 
+genres_set = ["Action", "Romance", "Horror", "Comedy", "Thriller", "Adventure", "Family", "Fantasy", "Thriller",
+              "Sci-fi", "History", "Document", "Parody", "Teen", "Kid", "Superheroes", "War", "Drama", "Educational",
+              "Short", "Animated"]
+
 
 def login(name, password):
     user = users_col.find_one({"name": name})
@@ -108,7 +112,7 @@ def add_movie_box2(user_id, name):
 
 
 def add_movie_box3(user_id, name, director):
-    genres = multenterbox("Gatunki", title, ["1", "2", "3", "4", "5", "6", "7", "8"])
+    genres = multchoicebox("Gatunki", title, genres_set)
     while "" in genres:
         genres.remove("")
     add_movie_box4(user_id, name, director, genres)
