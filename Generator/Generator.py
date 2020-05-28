@@ -71,5 +71,5 @@ name_set2 = [" Adventure", " City", " Person", " Castle", " Dwarf", " Elf", " Co
 
 name_set3 = [" of Endless Fun", "", " of the Dead", " with Morgan Freeman", " that never returns", ""]
 
-for i in range(10):
-    print(gen_movie_name(name_set1, name_set2, name_set3))
+client = pymongo.MongoClient("mongodb://localhost:27017")
+db = client["test_db"]
