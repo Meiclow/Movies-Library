@@ -1,10 +1,5 @@
 import pymongo
 
-client = pymongo.MongoClient("mongodb://localhost:27017")
-db = client["movies_library"]
-movies_col = db["movies"]
-reviews_col = db["reviews"]
-users_col = db["users"]
 
 def findObjectByName(name, collection):
     return collection.find({"name": name})
@@ -24,5 +19,9 @@ def findovieByRatingMargin(ratingFrom, ratingTo, collection):
 def findMovieByDirector(director, collection):
     return collection.find({"director": director})
 
-def findMovieByCategory(category, collection):
-    return collection.find({"category"})
+def findMovieByCategory(genre, collection):
+    return collection.find({"genres": genre})
+
+def findMovieReviews(movieName, Moviecollection, ReviewCollection):
+    movieId = Moviecollection.find({"name": name})
+    return collection.find({})
