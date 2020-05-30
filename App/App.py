@@ -2,6 +2,8 @@ import pymongo
 import time
 from easygui import *
 
+from Functionalities import Functions as f
+
 client = pymongo.MongoClient("mongodb://localhost:27017")
 db = client["movies_library"]
 movies_col = db["movies"]
@@ -92,7 +94,27 @@ def menu_box(user_id):
 
 
 def movies_box(user_id):
-    print("movies_box")
+    movies = f.showAllObjects(movies_col)
+    choices = []
+    for movie in movies:
+        choices.append(movie["name"])
+    choice = choicebox(msg="Pick a movie", choices=choices)
+    display_movie_box(choice, user_id)
+
+
+def display_movie_box(movie_name, user_id):
+    movieCursor = f.findObjectByName(movie_name, movies_col)
+
+    for movie in movieCursor:
+        genres = ""
+        for i in movie["genres"]:
+            genres += i
+            genres += ", "
+        msgbox(movie["name"] + "\n" + "gatunki: "+ genres + "\n"+ "Reżyser: "+ movie["director"] + "\n"
+               + "Rok produkcji: "+ str(movie["year"]) + "\n" + "Średnia ocena: "+str(f.averageStar(movie["_id"], movies_col))
+               + "\n" + "Ilość recenzji: "+ str(f.countMovieReviews(movie["name"], movies_col, reviews_col)))
+        break
+    movies_box(user_id)
 
 
 def my_reviews_box(user_id):

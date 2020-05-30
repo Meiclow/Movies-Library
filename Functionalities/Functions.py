@@ -7,6 +7,8 @@ movies_col = db["movies"]
 reviews_col = db["reviews"]
 users_col = db["users"]
 
+def showAllObjects(collection):
+    return collection.find()
 
 def getIDOfObject(name, collection):
     a = collection.find({"name": name}, {"_id": 1})
@@ -67,5 +69,13 @@ def countUserReviews(userName, userCollection, ReviewCollection):
     userID = getIDOfObject(userName, userCollection)
     return ReviewCollection.find({"user": userID}).count()
 
+def averageStar(movieID, reviewCollection):
+    a = reviewCollection.aggregate([
+        {"$match": {"movie_id": movieID}},
+        {"$group": {"_id": "movie_id", "avg": {"$avg": "$rating"}}}
+    ])
+    for bla in a:
+        return bla['avg']
 
 
+# print(averageStar(getIDOfObject("White Person - that's what she said", movies_col), reviews_col))

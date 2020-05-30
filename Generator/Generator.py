@@ -4,7 +4,7 @@ import pymongo
 import names as n
 import random as r
 from faker import Faker
-
+from Functionalities import Functions as f
 
 def gen_genres(genres_base):
     copy = genres_base.copy()
@@ -86,7 +86,7 @@ name_set3 = [" of Endless Fun", "", " of the Dead", " with Morgan Freeman", " th
 name_sets = [name_set1, name_set2, name_set3]
 
 client = pymongo.MongoClient("mongodb://localhost:27017")
-client.drop_database("movies_library")
+# client.drop_database("movies_library")
 db = client["movies_library"]
 movies_col = db["movies"]
 reviews_col = db["reviews"]
@@ -117,10 +117,14 @@ def insert_review(review: Review):
 r.seed()
 u_ids = []
 m_ids = []
+"""
 for i in range(100):
     u_ids.append(insert_movie(Movie.gen_movie(name_sets, genres_set)))
     m_ids.append(insert_user(User.gen_user()))
 for i in range(100):
     u_id = r.choice(u_ids)
     m_id = r.choice(m_ids)
-    insert_review(Review.gen_review(u_id, m_id))
+    insert_review(Review.gen_review(u_id, m_id))"""
+
+insert_review(Review.gen_review(f.getIDOfObject("Dronka", users_col), f.getIDOfObject("White Person - that's what she said", movies_col)))
+
