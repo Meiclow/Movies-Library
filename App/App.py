@@ -132,7 +132,9 @@ def filter_box(user_id):
         else:
             made_a_choice = False
     if made_a_choice:
-        if movies is not None:
+        if len(movies) == 1:
+            display_movie_box(movies[0], user_id)
+        elif len(movies) > 0:
             choice = choicebox(msg="Pick a movie", choices=movies)
             display_movie_box(choice, user_id)
         else:
