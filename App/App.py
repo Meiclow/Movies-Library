@@ -98,7 +98,8 @@ def menu_box(user_id):
 
 
 def movies_box(user_id):
-    if ynbox("Chcesz filtrować wyniki?", title):
+    y = ynbox("Chcesz filtrować wyniki?", title)
+    if y:
         filter_box(user_id)
     else:
         movies = f.get_name_list_from_cursor(f.show_all_objects(movies_col))
@@ -183,7 +184,7 @@ def filter_box(user_id):
 
 def display_movie_box(movie_name, user_id):
     movie_cursor = f.find_object_by_name(movie_name, movies_col)
-    movie = movie_cursor[0];
+    movie = movie_cursor[0]
     genres = ""
     for i in movie["genres"]:
         genres += i
@@ -195,14 +196,35 @@ def display_movie_box(movie_name, user_id):
         rat = "Średnia ocen: " + str(rat)
     choice = buttonbox(movie["name"] + "\n" + "Gatunki: " + genres + "\n" + "Reżyser: " + movie["director"] + "\n"
                        + rat + "\n" + "Ilość recenzji: "
-                       + str(f.count_movie_reviews(movie["name"], movies_col, reviews_col)), title, ["Oceń", "Wyjdź"])
+                       + str(f.count_movie_reviews(movie["name"], movies_col, reviews_col)),
+                       title, ["Oceń", "Wyjdź", "Oceny"])
     if choice == "Oceń":
-        add_review_box(movie_name, user_id)
+        add_review_box(movie["_id"], user_id)
+    elif choice == "Oceny":
+        reviews_of_movie_box(movie_name, user_id)
     else:
         check_continue_browsing_box(user_id)
 
 
-def add_review_box(movie_name, user_id):
+def reviews_of_movie_box(movie_name, user_id):
+    reviews = f.find_movie_reviews(movie_name, movies_col, reviews_col)
+    if reviews.count() == 0:
+        msgbox("Ten film nie ma ocen", title)
+        menu_box(user_id)
+    else:
+        reviews_dic = {}
+        for i in range(reviews.count()):
+            name = "Recenzja " + str(i)
+            reviews_dic[name] = reviews[i]
+        review_names = []
+        for name in reviews_dic.keys():
+            review_names.append(name)
+        choice = choicebox("Recenzje filmu:", title, review_names)
+        review_box(user_id, reviews_dic[choice], movie_name)
+
+
+
+def add_review_box(movie_id, user_id):
     print("add_review_box")
 
 
@@ -215,7 +237,7 @@ def check_continue_browsing_box(user_id):
 
 def my_reviews_box(user_id):
     reviews = f.find_user_reviews(user_id, reviews_col)
-    if len(reviews) == 0:
+    if reviews.count() == 0:
         msgbox("Nie oceniłeś/aś żadnych filmów", title)
         menu_box(user_id)
     else:
