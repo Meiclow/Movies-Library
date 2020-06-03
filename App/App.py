@@ -1,5 +1,4 @@
 import pymongo
-import time
 from easygui import *
 from bson.objectid import ObjectId
 from Functionalities import Functions as f
