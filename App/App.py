@@ -112,7 +112,8 @@ def movies_box(user_id):
         choice = choicebox(msg="Pick a movie", choices=movies)
         if choice is not None:
             display_movie_box(choice, user_id)
-        menu_box(user_id)
+        else:
+            menu_box(user_id)
 
 
 def filter_box(user_id):
