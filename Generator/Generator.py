@@ -110,19 +110,21 @@ def insert_movie(movie: Movie):
 def insert_review(review: Review):
     if reviews_col.find_one({"user_id": review.user, "movie_id": review.movie}):
         return None
-    review_id = reviews_col.insert_one({"rating": review.rating, "text": review.txt, "user_id": ObjectId(review.user),
-                                        "movie_id": ObjectId(review.movie)}).inserted_id
-    return review_id
+    return reviews_col.insert_one({"rating": review.rating, "text": review.txt,
+                                   "user_id": ObjectId(review.user), "movie_id": ObjectId(review.movie)}).inserted_id
 
 
 r.seed()
 u_ids = []
 m_ids = []
 
+print("Generating users and movies...")
 for i in range(100):
-    u_ids.append(insert_movie(Movie.gen_movie(name_sets, genres_set)))
-    m_ids.append(insert_user(User.gen_user()))
-for i in range(1000):
-    u_id = r.choice(u_ids)
-    m_id = r.choice(m_ids)
-    insert_review(Review.gen_review(u_id, m_id))
+    m_ids.append(insert_movie(Movie.gen_movie(name_sets, genres_set)))
+    u_ids.append(insert_user(User.gen_user()))
+print("Users and movies generated")
+print("Generating reviews...")
+for m_id in m_ids:
+    for j in range(r.randint(2, 5)):
+        insert_review(Review.gen_review(r.choice(u_ids), m_id))
+print("Reviews generated")

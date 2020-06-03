@@ -68,7 +68,6 @@ def get_name_list_from_cursor(cursor):
 
 def find_movie_reviews(movie_name, movie_collection, review_collection):
     movie_id = get_id_of_object(movie_name, movie_collection)
-    print(movie_id)
     return review_collection.find({"movie_id": ObjectId(movie_id)})
 
 
