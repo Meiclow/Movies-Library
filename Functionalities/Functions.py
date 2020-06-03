@@ -58,7 +58,7 @@ def get_list_from_cursor(cursor):
     return objects
 
 
-def get_name_list_from_cursor(cursor):
+def gat_name_list_from_cursor(cursor):
     objects = []
     for elem in cursor:
         objects.append(elem["name"])
@@ -67,17 +67,16 @@ def get_name_list_from_cursor(cursor):
 
 def find_movie_reviews(movie_name, movie_collection, review_collection):
     movie_id = get_id_of_object(movie_name, movie_collection)
-    return review_collection.find({"movie_id": movie_id})
+    return review_collection.find({"movie": movie_id})
 
 
-def find_user_reviews(user_name, user_collection, review_collection):
-    user_id = get_id_of_object(user_name, user_collection)
-    return review_collection.find({"user_id": user_id})
+def find_user_reviews(user_id, review_collection):
+    return review_collection.find({"user": user_id})
 
 
 def count_movie_reviews(movie_name, movie_collection, review_collection):
     movie_id = get_id_of_object(movie_name, movie_collection)
-    return review_collection.find({"movie_id": movie_id}).count()
+    return review_collection.find({"movie": movie_id}).count()
 
 
 def count_user_reviews(user_name, user_collection, review_collection):
@@ -92,4 +91,3 @@ def average_rating(movie_id, review_collection):
     ])
     for bla in a:
         return bla['avg']
-
