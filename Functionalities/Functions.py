@@ -87,6 +87,3 @@ def averageStar(movieID, reviewCollection):
     ])
     for bla in a:
         return bla['avg']
-
-
-# print(averageStar(getIDOfObject("White Person - that's what she said", movies_col), reviews_col))

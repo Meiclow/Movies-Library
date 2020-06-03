@@ -32,13 +32,6 @@ def register(name, password):
     return users_col.insert_one({"name": name, "password": password}).inserted_id
 
 
-def add_movie(name, genres, director, year):
-    if movies_col.find_one({"name": name}):
-        return None
-    return movies_col.insert_one({"name": name, "genres": genres,
-                                  "director": director, "year": year}).inserted_id
-
-
 def start_box():
     choices = ["Zaloguj", "Zarejestruj", "Wyjdź"]
     choice = buttonbox("Witaj w bibliotece filmowej", title, choices)
@@ -105,9 +98,9 @@ def movies_box(user_id):
 
 def filter_box(user_id):
     choice = choicebox("Wybierz kategorię", title, choices=["gatunek", "reżyser", "rok produkcji"])
-    made_a_choice=True
+    made_a_choice = True
     movies = None
-    if choice == None:
+    if choice is None:
         check_continue_browsing_box(user_id)
     else:
         if choice == "gatunek":
@@ -176,29 +169,29 @@ def filter_box(user_id):
         display_movie_box(choice, user_id)"""
 
 
-
-
-
 def display_movie_box(movie_name, user_id):
-    movieCursor = f.findObjectByName(movie_name, movies_col)
+    movie_cursor = f.findObjectByName(movie_name, movies_col)
 
-    for movie in movieCursor:
+    for movie in movie_cursor:
         genres = ""
         for i in movie["genres"]:
             genres += i
             genres += ", "
-        msgbox(movie["name"] + "\n" + "gatunki: "+ genres + "\n"+ "Reżyser: "+ movie["director"] + "\n"
-               + "Rok produkcji: "+ str(movie["year"]) + "\n" + "Średnia ocena: "+str(f.averageStar(movie["_id"], movies_col))
-               + "\n" + "Ilość recenzji: "+ str(f.countMovieReviews(movie["name"], movies_col, reviews_col)))
+        msgbox(movie["name"] + "\n" + "gatunki: " + genres + "\n" + "Reżyser: " + movie["director"] + "\n"
+               + "Rok produkcji: " + str(movie["year"]) + "\n" + "Średnia ocena: "
+               + str(f.averageStar(movie["_id"], movies_col))
+               + "\n" + "Ilość recenzji: " + str(f.countMovieReviews(movie["name"], movies_col, reviews_col)))
         break
 
     check_continue_browsing_box(user_id)
+
 
 def check_continue_browsing_box(user_id):
     if ccbox("Do you want to continue browsing?"):
         movies_box(user_id)
     else:
         menu_box(user_id)
+
 
 def my_reviews_box(user_id):
     print("my_reviews_box")
@@ -223,7 +216,7 @@ def add_movie_box3(user_id, name, director):
 
 def add_movie_box4(user_id, name, director, genres):
     year = int(enterbox("Rok", title))
-    movie_id = add_movie(name, genres, director, year)
+    movie_id = g.insert_movie(g.Movie(name, genres, director, year))
     if not movie_id:
         movie_exists_box(user_id)
     else:
