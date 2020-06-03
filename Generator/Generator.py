@@ -110,8 +110,8 @@ def insert_movie(movie: Movie):
 def insert_review(review: Review):
     if reviews_col.find_one({"user_id": review.user, "movie_id": review.movie}):
         return None
-    review_id = reviews_col.insert_one({"rating": review.rating, "text": review.txt,
-                                        "user_id": review.user, "movie_id": review.movie}).inserted_id
+    review_id = reviews_col.insert_one({"rating": review.rating, "text": review.txt, "user_id": ObjectId(review.user),
+                                        "movie_id": ObjectId(review.movie)}).inserted_id
     return review_id
 
 
@@ -125,4 +125,4 @@ for i in range(100):
 for i in range(1000):
     u_id = r.choice(u_ids)
     m_id = r.choice(m_ids)
-    insert_review(Review.gen_review(ObjectId(u_id), ObjectId(m_id)))
+    insert_review(Review.gen_review(u_id, m_id))
