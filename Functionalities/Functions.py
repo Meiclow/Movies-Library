@@ -49,6 +49,17 @@ def findMovieByDirector(director, collection):
 def findMovieByCategory(genre, collection):
     return collection.find({"genres": genre})
 
+def getListFromCursor(cursor):
+    objects = []
+    for elem in cursor:
+        objects.append(elem)
+    return objects
+
+def getNameListFromCursor(cursor):
+    objects = []
+    for elem in cursor:
+        objects.append(elem["name"])
+    return objects
 
 def findMovieReviews(movieName, Moviecollection, ReviewCollection):
     movieId = getIDOfObject(movieName, Moviecollection)
