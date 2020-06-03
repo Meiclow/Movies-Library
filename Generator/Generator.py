@@ -6,6 +6,7 @@ import random as r
 from faker import Faker
 from Functionalities import Functions as f
 
+
 def gen_genres(genres_base):
     copy = genres_base.copy()
     genres = []
@@ -117,14 +118,11 @@ def insert_review(review: Review):
 r.seed()
 u_ids = []
 m_ids = []
-"""
+
 for i in range(100):
     u_ids.append(insert_movie(Movie.gen_movie(name_sets, genres_set)))
     m_ids.append(insert_user(User.gen_user()))
 for i in range(100):
     u_id = r.choice(u_ids)
     m_id = r.choice(m_ids)
-    insert_review(Review.gen_review(u_id, m_id))"""
-
-insert_review(Review.gen_review(f.getIDOfObject("Dronka", users_col), f.getIDOfObject("White Person - that's what she said", movies_col)))
-
+    insert_review(Review.gen_review(u_id, m_id))
