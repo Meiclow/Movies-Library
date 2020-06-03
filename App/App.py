@@ -1,7 +1,7 @@
 import pymongo
 import time
 from easygui import *
-
+from bson.objectid import ObjectId
 from Functionalities import Functions as f
 
 print("Connecting to client...")
@@ -46,7 +46,7 @@ def insert_review(rating, text, user_id, movie_id):
     if reviews_col.find_one({"user_id": user_id, "movie_id": movie_id}):
         return None
     return reviews_col.insert_one({"rating": rating, "text": text,
-                                   "user_id": user_id, "movie_id": movie_id}).inserted_id
+                                   "user_id": ObjectId(user_id), "movie_id": ObjectId(movie_id)}).inserted_id
 
 
 def start_box():

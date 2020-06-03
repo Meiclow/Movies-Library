@@ -4,6 +4,7 @@ import pymongo
 import names as n
 import random as r
 from faker import Faker
+from bson.objectid import ObjectId
 
 
 def gen_genres(genres_base):
@@ -124,4 +125,4 @@ for i in range(100):
 for i in range(1000):
     u_id = r.choice(u_ids)
     m_id = r.choice(m_ids)
-    insert_review(Review.gen_review(u_id, m_id))
+    insert_review(Review.gen_review(ObjectId(u_id), ObjectId(m_id)))
