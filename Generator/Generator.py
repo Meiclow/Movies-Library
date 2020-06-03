@@ -87,7 +87,7 @@ name_set3 = [" of Endless Fun", "", " of the Dead", " with Morgan Freeman", " th
 name_sets = [name_set1, name_set2, name_set3]
 
 client = pymongo.MongoClient("mongodb://localhost:27017")
-# client.drop_database("movies_library")
+client.drop_database("movies_library")
 db = client["movies_library"]
 movies_col = db["movies"]
 reviews_col = db["reviews"]
