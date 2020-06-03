@@ -5,8 +5,10 @@ from easygui import *
 print("Importing libraries...")
 
 from Functionalities import Functions as f
+
 print("Imported Functions")
-from Generator import Generator as g
+from Generator.Generator import Movie, genres_set, insert_movie
+
 print("Imported Generator")
 
 print("Imported")
@@ -22,9 +24,9 @@ users_col = db["users"]
 print("Data accessed")
 title = "Biblioteka Filmowa"
 
-genres_set = ["Action", "Romance", "Horror", "Comedy", "Thriller", "Adventure", "Family", "Fantasy", "Thriller",
+"""genres_set = ["Action", "Romance", "Horror", "Comedy", "Thriller", "Adventure", "Family", "Fantasy", "Thriller",
               "Sci-fi", "History", "Document", "Parody", "Teen", "Kid", "Superheroes", "War", "Drama", "Educational",
-              "Short", "Animated"]
+              "Short", "Animated"]"""
 
 
 def login(name, password):
@@ -114,7 +116,7 @@ def filter_box(user_id):
         check_continue_browsing_box(user_id)
     else:
         if choice == "gatunek":
-            genre = choicebox("Wybierz gatunki", title, g.genres_set)
+            genre = choicebox("Wybierz gatunki", title, genres_set)
             if genre is not None:
                 movies = f.get_name_list_from_cursor(f.find_movie_by_category(genre, movies_col))
             else:
@@ -256,7 +258,7 @@ def add_movie_box3(user_id, name, director):
 
 def add_movie_box4(user_id, name, director, genres):
     year = int(enterbox("Rok", title))
-    movie_id = g.insert_movie(g.Movie(name, genres, director, year))
+    movie_id = insert_movie(Movie(name, genres, director, year))
     if not movie_id:
         movie_exists_box(user_id)
     else:
