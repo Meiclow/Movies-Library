@@ -7,80 +7,86 @@ movies_col = db["movies"]
 reviews_col = db["reviews"]
 users_col = db["users"]
 
-def showAllObjects(collection):
+
+def show_all_objects(collection):
     return collection.find()
 
-def getIDOfObject(name, collection):
+
+def get_id_of_object(name, collection):
     a = collection.find({"name": name}, {"_id": 1})
     for bla in a:
         return bla['_id']
 
 
-def getNameOfObject(id, collection):
+def get_name_of_object(id, collection):
     a = collection.find({"_id": id}, {"name": 1, "_id": 0})
     for bla in a:
         return bla['name']
 
 
-def findObjectByName(name, collection):
+def find_object_by_name(name, collection):
     return collection.find({"name": name})
 
 
-def findovieByYear(year, collection):
+def find_movie_by_year(year, collection):
     return collection.find({"year": year})
 
 
-def findovieByYearMargin(yearFrom, yearTo, collection):
+def find_movie_by_year_margin(yearFrom, yearTo, collection):
     return collection.find({"$and": [{"year": {"$gte": yearFrom}}, {"year": {"$lte": yearTo}}]})
 
 
-def findMovieByRating(rating, collection):
+def find_movie_by_rating(rating, collection):
     return collection.find({"rating": rating})
 
 
-def findovieByRatingMargin(ratingFrom, ratingTo, collection):
+def find_movie_by_rating_margin(ratingFrom, ratingTo, collection):
     return collection.find({"$and": [{"rating": {"$gte": ratingFrom}}, {"rating": {"$lte": ratingTo}}]})
 
 
-def findMovieByDirector(director, collection):
+def find_movie_by_director(director, collection):
     return collection.find({"director": director})
 
 
-def findMovieByCategory(genre, collection):
+def find_movie_by_category(genre, collection):
     return collection.find({"genres": genre})
 
-def getListFromCursor(cursor):
+
+def get_list_from_cursor(cursor):
     objects = []
     for elem in cursor:
         objects.append(elem)
     return objects
 
-def getNameListFromCursor(cursor):
+
+def gat_name_list_from_cursor(cursor):
     objects = []
     for elem in cursor:
         objects.append(elem["name"])
     return objects
 
-def findMovieReviews(movieName, Moviecollection, ReviewCollection):
-    movieId = getIDOfObject(movieName, Moviecollection)
-    return ReviewCollection.find({"movie": movieId})
+
+def find_movie_reviews(movieName, Moviecollection, ReviewCollection):
+    movie_id = get_id_of_object(movieName, Moviecollection)
+    return ReviewCollection.find({"movie": movie_id})
 
 
-def findUserReviews(userName, userCollection, ReviewCollection):
-    userID = getIDOfObject(userName, userCollection)
+def find_user_reviews(userName, userCollection, ReviewCollection):
+    userID = get_id_of_object(userName, userCollection)
     return ReviewCollection.find({"user": userID})
 
 
-def countMovieReviews(movieName, Moviecollection, ReviewCollection):
-    movieId = getIDOfObject(movieName, Moviecollection)
+def count_movie_reviews(movieName, Moviecollection, ReviewCollection):
+    movieId = get_id_of_object(movieName, Moviecollection)
     return ReviewCollection.find({"movie": movieId}).count()
 
 
-def countUserReviews(userName, userCollection, ReviewCollection):
-    userID = getIDOfObject(userName, userCollection)
+def count_user_reviews(userName, userCollection, ReviewCollection):
+    userID = get_id_of_object(userName, userCollection)
     return ReviewCollection.find({"user": userID}).count()
 
-def averageStar(movieID, reviewCollection):
+
+def average_rating(movieID, reviewCollection):
     a = reviewCollection.aggregate([
         {"$match": {"movie_id": movieID}},
         {"$group": {"_id": "movie_id", "avg": {"$avg": "$rating"}}}
