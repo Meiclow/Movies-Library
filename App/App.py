@@ -2,14 +2,12 @@ import pymongo
 import time
 from easygui import *
 
-print("Importing libraries...")
-
+print("Importing external libraries...")
 from Functionalities import Functions as f
 print("Imported Functions")
 from Generator import Generator as g
 print("Imported Generator")
-
-print("Imported")
+print("Imported external libraries")
 
 print("Connecting to client...")
 client = pymongo.MongoClient("mongodb://localhost:27017")

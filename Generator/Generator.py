@@ -4,7 +4,6 @@ import pymongo
 import names as n
 import random as r
 from faker import Faker
-from Functionalities import Functions as f
 
 
 def gen_genres(genres_base):
