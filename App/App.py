@@ -42,6 +42,13 @@ def insert_movie(name, genres, director, year):
                                   "director": director, "year": year}).inserted_id
 
 
+def insert_review(rating, text, user_id, movie_id):
+    if reviews_col.find_one({"user_id": user_id, "movie_id": movie_id}):
+        return None
+    return reviews_col.insert_one({"rating": rating, "text": text,
+                                   "user_id": user_id, "movie_id": movie_id}).inserted_id
+
+
 def start_box():
     choices = ["Zaloguj", "Zarejestruj", "Wyjdź"]
     choice = buttonbox("Witaj w bibliotece filmowej", title, choices)
@@ -183,7 +190,7 @@ def filter_box(user_id):
 
 def display_movie_box(movie_name, user_id):
     movie_cursor = f.find_object_by_name(movie_name, movies_col)
-    movie = movie_cursor[0];
+    movie = movie_cursor[0]
     genres = ""
     for i in movie["genres"]:
         genres += i
@@ -202,8 +209,28 @@ def display_movie_box(movie_name, user_id):
         check_continue_browsing_box(user_id)
 
 
-def add_review_box(movie_name, user_id):
-    print("add_review_box")
+def add_review_box(movie_id, user_id):
+    rating = integerbox("Podaj jak oceniasz film w skali 1-5", lowerbound=1, upperbound=5)
+    add_review_box2(movie_id, user_id, rating)
+
+
+def add_review_box2(movie_id, user_id, rating):
+    text = enterbox("Co sądzisz o filmie?", title)
+    review = insert_review(rating, text, user_id, movie_id)
+    if not review:
+        review_exists(user_id)
+    else:
+        review_added(user_id, movie_id)
+
+
+def review_exists(user_id):
+    msgbox("Oceniłeś już dany film", title)
+    menu_box(user_id)
+
+
+def review_added(user_id, movie_id):
+    msgbox("Pomyślnie dodano recenzję filmu "+str(f.get_name_of_object(movie_id, movies_col)), title)
+    menu_box(user_id)
 
 
 def check_continue_browsing_box(user_id):
