@@ -267,11 +267,19 @@ def review_box(user_id, review, movie_name):
 
 def add_movie_box(user_id):
     name = enterbox("Nazwa filmu", title)
+    if name == "":
+        msgbox("Nie podano nazwy", title)
+        menu_box(user_id)
+        return
     add_movie_box2(user_id, name)
 
 
 def add_movie_box2(user_id, name):
     director = enterbox("Nazwa reżysera", title)
+    if director == "":
+        msgbox("Nie podano nazwy reżysera", title)
+        menu_box(user_id)
+        return
     add_movie_box3(user_id, name, director)
 
 
@@ -283,7 +291,16 @@ def add_movie_box3(user_id, name, director):
 
 
 def add_movie_box4(user_id, name, director, genres):
-    year = int(enterbox("Rok", title))
+    year = enterbox("Rok", title)
+    if not year.isnumeric():
+        msgbox("Rok produkcji musi być liczbą", title)
+        menu_box(user_id)
+        return
+    year = int(year)
+    if year < 0 or year > 10000:
+        msgbox("To nie jest poprawna data")
+        menu_box(user_id)
+        return
     movie_id = insert_movie(name, genres, director, year)
     if not movie_id:
         movie_exists_box(user_id)
