@@ -122,7 +122,7 @@ m_ids = []
 for i in range(100):
     u_ids.append(insert_movie(Movie.gen_movie(name_sets, genres_set)))
     m_ids.append(insert_user(User.gen_user()))
-for i in range(100):
+for i in range(1000):
     u_id = r.choice(u_ids)
     m_id = r.choice(m_ids)
     insert_review(Review.gen_review(u_id, m_id))
