@@ -2,14 +2,7 @@ import pymongo
 import time
 from easygui import *
 
-print("Importing external libraries...")
 from Functionalities import Functions as f
-
-print("Imported Functions")
-from Generator.Generator import Movie, genres_set, insert_movie
-
-print("Imported Generator")
-print("Imported external libraries")
 
 print("Connecting to client...")
 client = pymongo.MongoClient("mongodb://localhost:27017")
@@ -22,9 +15,9 @@ users_col = db["users"]
 print("Data accessed")
 title = "Biblioteka Filmowa"
 
-"""genres_set = ["Action", "Romance", "Horror", "Comedy", "Thriller", "Adventure", "Family", "Fantasy", "Thriller",
+genres_set = ["Action", "Romance", "Horror", "Comedy", "Thriller", "Adventure", "Family", "Fantasy", "Thriller",
               "Sci-fi", "History", "Document", "Parody", "Teen", "Kid", "Superheroes", "War", "Drama", "Educational",
-              "Short", "Animated"]"""
+              "Short", "Animated"]
 
 
 def login(name, password):
@@ -40,6 +33,13 @@ def register(name, password):
     if users_col.find_one({"name": name}):
         return None
     return users_col.insert_one({"name": name, "password": password}).inserted_id
+
+
+def insert_movie(name, genres, director, year):
+    if movies_col.find_one({"name": name}):
+        return None
+    return movies_col.insert_one({"name": name, "genres": genres,
+                                  "director": director, "year": year}).inserted_id
 
 
 def start_box():
@@ -256,7 +256,7 @@ def add_movie_box3(user_id, name, director):
 
 def add_movie_box4(user_id, name, director, genres):
     year = int(enterbox("Rok", title))
-    movie_id = insert_movie(Movie(name, genres, director, year))
+    movie_id = insert_movie(name, genres, director, year)
     if not movie_id:
         movie_exists_box(user_id)
     else:
