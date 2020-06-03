@@ -68,7 +68,7 @@ Domyślnie generator tworzy około 100 użytkowników, 100 filmów i 340 recenzj
 
 W dalszej kolejności przystąpiliśmy do realizacji fukcji, które umożliwiłyby nam wyszukiwanie, modyfikowanie i agregowanie obiektów bazy. Wszystkie stworzone w ten sposób funkcję znajdują się w pliku Functions.py w folderze Functionalities.
 
-## Front-end
+## 5. Front-end
 
 Następnie stworzyliśmy warstwę front-end. Nie skupialiśmy się na wizualnej oprawie aplikacji, stąd zdecydowaliśmy się na użycie prostej w użyciu biblioteki easygui. Umożliwia ona tworzenie okienkowego gui w stylu kaskadowym (po każdym oknie wyświetlane jest następne w zależności od inputu w poprzednich).
 
@@ -80,6 +80,10 @@ W aktualnym stanie aplikacji użytkownik może:
 - przeglądać wszystkie filmy w bazie
 - przeglądać filmy przefiltrowane przez gatunki, reżysera lub rok produkcji
 - dodawać recenzję do wybranych filmów (jest w tym ograniczony, poprzez maksymalnie jedną recenzję na film)
+- przeglądać recenzje danego filmu
+- przeglądać własne recenzje filmów
+- dodawać filmy do bazy
+
 
 
 
