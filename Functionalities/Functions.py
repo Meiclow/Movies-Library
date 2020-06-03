@@ -1,5 +1,4 @@
 import pymongo
-from bson import ObjectId
 
 client = pymongo.MongoClient("mongodb://localhost:27017")
 db = client["movies_library"]
@@ -18,8 +17,8 @@ def get_id_of_object(name, collection):
         return bla['_id']
 
 
-def get_name_of_object(id, collection):
-    a = collection.find({"_id": id}, {"name": 1, "_id": 0})
+def get_name_of_object(object_id, collection):
+    a = collection.find({"_id": object_id}, {"name": 1, "_id": 0})
     for bla in a:
         return bla['name']
 
@@ -32,16 +31,16 @@ def find_movie_by_year(year, collection):
     return collection.find({"year": year})
 
 
-def find_movie_by_year_margin(yearFrom, yearTo, collection):
-    return collection.find({"$and": [{"year": {"$gte": yearFrom}}, {"year": {"$lte": yearTo}}]})
+def find_movie_by_year_margin(year_from, year_to, collection):
+    return collection.find({"$and": [{"year": {"$gte": year_from}}, {"year": {"$lte": year_to}}]})
 
 
 def find_movie_by_rating(rating, collection):
     return collection.find({"rating": rating})
 
 
-def find_movie_by_rating_margin(ratingFrom, ratingTo, collection):
-    return collection.find({"$and": [{"rating": {"$gte": ratingFrom}}, {"rating": {"$lte": ratingTo}}]})
+def find_movie_by_rating_margin(rating_from, rating_to, collection):
+    return collection.find({"$and": [{"rating": {"$gte": rating_from}}, {"rating": {"$lte": rating_to}}]})
 
 
 def find_movie_by_director(director, collection):
@@ -66,29 +65,29 @@ def gat_name_list_from_cursor(cursor):
     return objects
 
 
-def find_movie_reviews(movieName, Moviecollection, ReviewCollection):
-    movie_id = get_id_of_object(movieName, Moviecollection)
-    return ReviewCollection.find({"movie": movie_id})
+def find_movie_reviews(movie_name, movie_collection, review_collection):
+    movie_id = get_id_of_object(movie_name, movie_collection)
+    return review_collection.find({"movie": movie_id})
 
 
-def find_user_reviews(userName, userCollection, ReviewCollection):
-    userID = get_id_of_object(userName, userCollection)
-    return ReviewCollection.find({"user": userID})
+def find_user_reviews(user_name, user_collection, review_collection):
+    user_id = get_id_of_object(user_name, user_collection)
+    return review_collection.find({"user": user_id})
 
 
-def count_movie_reviews(movieName, Moviecollection, ReviewCollection):
-    movieId = get_id_of_object(movieName, Moviecollection)
-    return ReviewCollection.find({"movie": movieId}).count()
+def count_movie_reviews(movie_name, movie_collection, review_collection):
+    movie_id = get_id_of_object(movie_name, movie_collection)
+    return review_collection.find({"movie": movie_id}).count()
 
 
-def count_user_reviews(userName, userCollection, ReviewCollection):
-    userID = get_id_of_object(userName, userCollection)
-    return ReviewCollection.find({"user": userID}).count()
+def count_user_reviews(user_name, user_collection, review_collection):
+    user_id = get_id_of_object(user_name, user_collection)
+    return review_collection.find({"user": user_id}).count()
 
 
-def average_rating(movieID, reviewCollection):
-    a = reviewCollection.aggregate([
-        {"$match": {"movie_id": movieID}},
+def average_rating(movie_id, review_collection):
+    a = review_collection.aggregate([
+        {"$match": {"movie_id": movie_id}},
         {"$group": {"_id": "movie_id", "avg": {"$avg": "$rating"}}}
     ])
     for bla in a:
