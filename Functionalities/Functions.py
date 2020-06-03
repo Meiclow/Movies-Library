@@ -1,11 +1,11 @@
 import pymongo
+from bson.objectid import ObjectId
 
 client = pymongo.MongoClient("mongodb://localhost:27017")
 db = client["movies_library"]
 movies_col = db["movies"]
 reviews_col = db["reviews"]
 users_col = db["users"]
-from bson.objectid import ObjectId
 
 
 def show_all_objects(collection):
