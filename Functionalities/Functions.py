@@ -87,9 +87,11 @@ def count_user_reviews(user_name, user_collection, review_collection):
 
 
 def average_rating(movie_id, review_collection):
-    a = review_collection.aggregate([
-        {"$match": {"movie_id": movie_id}},
-        {"$group": {"_id": "movie_id", "avg": {"$avg": "$rating"}}}
-    ])
+    movie_id = ObjectId(movie_id)
+    a = list(review_collection.aggregate([
+        {"$match": {"movie_id": ObjectId(movie_id)}},
+        {"$group": {"_id": "$movie_id", "avg": {"$avg": "$rating"}}}
+    ]))
+
     for bla in a:
-        return bla['avg']
+        return bla["avg"]
