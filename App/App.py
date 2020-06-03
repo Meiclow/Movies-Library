@@ -196,7 +196,7 @@ def display_movie_box(movie_name, user_id):
     for i in movie["genres"]:
         genres += i
         genres += ", "
-    rat = f.average_rating(movie["_id"], movies_col)
+    rat = f.average_rating(movie["_id"], reviews_col)
     if rat is None:
         rat = "Brak ocen"
     else:
