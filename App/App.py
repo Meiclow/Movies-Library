@@ -278,8 +278,9 @@ def my_reviews_box(user_id):
 
 
 def review_box(user_id, review, movie_name):
-    msgbox("Tytuł: " + movie_name + "\n" + "Ocena: " + str(review["rating"]) + "\n" + "Recenzja: " + "\n" +
-           str(review["text"]), title)
+    author = f.get_name_of_object(review["user_id"], users_col)
+    msgbox("Autor recenzji: " + author + "\n" + "Tytuł: " + movie_name + "\n" + "Ocena: " + str(review["rating"]) + "\n"
+           + "Recenzja: " + "\n" + str(review["text"]), title)
     menu_box(user_id)
 
 
