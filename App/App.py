@@ -3,6 +3,7 @@ import time
 from easygui import *
 
 from Functionalities import Functions as f
+from Generator import Generator as g
 
 client = pymongo.MongoClient("mongodb://localhost:27017")
 db = client["movies_library"]
@@ -94,12 +95,49 @@ def menu_box(user_id):
 
 
 def movies_box(user_id):
-    movies = f.showAllObjects(movies_col)
-    choices = []
-    for movie in movies:
-        choices.append(movie["name"])
-    choice = choicebox(msg="Pick a movie", choices=choices)
-    display_movie_box(choice, user_id)
+    if ynbox("Chcesz filtrować wyniki?", title):
+        filter_box(user_id)
+    else:
+        movies = f.showAllObjects(movies_col)
+        choices = []
+        for movie in movies:
+            choices.append(movie["name"])
+        choice = choicebox(msg="Pick a movie", choices=choices)
+        display_movie_box(choice, user_id)
+
+def filter_box(user_id):
+    choices = multchoicebox("Wybierz kategorię", title, choices=["gatunek", "reżyser", "rok produkcji"])
+    if choices == None:
+        check_continue_browsing_box(user_id)
+    else:
+        new_movie_col = movies_col
+        if "gatunek" in choices:
+            genre_list = multchoicebox("Wybierz gatunki", title, g.genres_set)
+            if genre_list is not None:
+                for g in genre_list:
+                    new_movie_col = f.findMovieByCategory(g, new_movie_col)
+        if "reżyser" in choices:
+            director = enterbox(msg="Podaj imię i nazwisko reżysera", title=title)
+            if director is not None:
+                new_movie_col = f.findMovieByDirector(director, new_movie_col)
+        if "rok produkcji" in choices:
+            if ynbox("Czy chcesz wybra rok produkcji jako przedział?", title):
+                year0 = integerbox("Podaj początek przedziału", title)
+                year = integerbox("Podaj koniec przedziału", title)
+                if year0 is not None and year is not None:
+                    new_movie_col = f.findovieByYearMargin(year0, year, new_movie_col)
+            else:
+                year = integerbox("Podaj rok", title)
+                new_movie_col = f.findovieByYear(year, new_movie_col)
+        movies = f.showAllObjects(new_movie_col)
+        choices = []
+        for movie in movies:
+            choices.append(movie["name"])
+        choice = choicebox(msg="Pick a movie", choices=choices)
+        display_movie_box(choice, user_id)
+
+
+
 
 
 def display_movie_box(movie_name, user_id):
@@ -114,8 +152,14 @@ def display_movie_box(movie_name, user_id):
                + "Rok produkcji: "+ str(movie["year"]) + "\n" + "Średnia ocena: "+str(f.averageStar(movie["_id"], movies_col))
                + "\n" + "Ilość recenzji: "+ str(f.countMovieReviews(movie["name"], movies_col, reviews_col)))
         break
-    movies_box(user_id)
 
+    check_continue_browsing_box(user_id)
+
+def check_continue_browsing_box(user_id):
+    if ccbox("Do you want to continue browsing?"):
+        movies_box(user_id)
+    else:
+        menu_box(user_id)
 
 def my_reviews_box(user_id):
     print("my_reviews_box")
