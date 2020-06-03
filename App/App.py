@@ -4,8 +4,10 @@ from easygui import *
 
 print("Importing external libraries...")
 from Functionalities import Functions as f
+
 print("Imported Functions")
-from Generator import Generator as g
+from Generator.Generator import Movie, genres_set, insert_movie
+
 print("Imported Generator")
 print("Imported external libraries")
 
@@ -20,9 +22,9 @@ users_col = db["users"]
 print("Data accessed")
 title = "Biblioteka Filmowa"
 
-genres_set = ["Action", "Romance", "Horror", "Comedy", "Thriller", "Adventure", "Family", "Fantasy", "Thriller",
+"""genres_set = ["Action", "Romance", "Horror", "Comedy", "Thriller", "Adventure", "Family", "Fantasy", "Thriller",
               "Sci-fi", "History", "Document", "Parody", "Teen", "Kid", "Superheroes", "War", "Drama", "Educational",
-              "Short", "Animated"]
+              "Short", "Animated"]"""
 
 
 def login(name, password):
@@ -99,7 +101,7 @@ def movies_box(user_id):
     if ynbox("Chcesz filtrować wyniki?", title):
         filter_box(user_id)
     else:
-        movies = f.gat_name_list_from_cursor(f.show_all_objects(movies_col))
+        movies = f.get_name_list_from_cursor(f.show_all_objects(movies_col))
         choice = choicebox(msg="Pick a movie", choices=movies)
         display_movie_box(choice, user_id)
 
@@ -112,15 +114,15 @@ def filter_box(user_id):
         check_continue_browsing_box(user_id)
     else:
         if choice == "gatunek":
-            genre = choicebox("Wybierz gatunki", title, g.genres_set)
+            genre = choicebox("Wybierz gatunki", title, genres_set)
             if genre is not None:
-                movies = f.gat_name_list_from_cursor(f.find_movie_by_category(genre, movies_col))
+                movies = f.get_name_list_from_cursor(f.find_movie_by_category(genre, movies_col))
             else:
                 made_a_choice = False
         elif choice == "reżyser":
             director = enterbox(msg="Podaj imię i nazwisko reżysera", title=title)
             if director is not None:
-                movies = f.gat_name_list_from_cursor(f.find_movie_by_director(director, movies_col))
+                movies = f.get_name_list_from_cursor(f.find_movie_by_director(director, movies_col))
             else:
                 made_a_choice = False
         elif choice == "rok produkcji":
@@ -128,13 +130,13 @@ def filter_box(user_id):
                 year0 = integerbox("Podaj początek przedziału", title, lowerbound=1919, upperbound=2020)
                 year = integerbox("Podaj koniec przedziału", title, lowerbound=1919, upperbound=2020)
                 if year0 is not None and year is not None:
-                    movies = f.gat_name_list_from_cursor(f.find_movie_by_year_margin(year0, year, movies_col))
+                    movies = f.get_name_list_from_cursor(f.find_movie_by_year_margin(year0, year, movies_col))
                 else:
                     made_a_choice = False
             else:
                 year = integerbox("Podaj rok", title, lowerbound=1919, upperbound=2020)
                 if year is not None:
-                    movies = f.gat_name_list_from_cursor(f.find_movie_by_year(year, movies_col))
+                    movies = f.get_name_list_from_cursor(f.find_movie_by_year(year, movies_col))
                 else:
                     made_a_choice = False
         else:
@@ -254,7 +256,7 @@ def add_movie_box3(user_id, name, director):
 
 def add_movie_box4(user_id, name, director, genres):
     year = int(enterbox("Rok", title))
-    movie_id = g.insert_movie(g.Movie(name, genres, director, year))
+    movie_id = insert_movie(Movie(name, genres, director, year))
     if not movie_id:
         movie_exists_box(user_id)
     else:

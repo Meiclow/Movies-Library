@@ -58,7 +58,7 @@ def get_list_from_cursor(cursor):
     return objects
 
 
-def gat_name_list_from_cursor(cursor):
+def get_name_list_from_cursor(cursor):
     objects = []
     for elem in cursor:
         objects.append(elem["name"])
