@@ -111,7 +111,9 @@ def movies_box(user_id):
     else:
         movies = f.get_name_list_from_cursor(f.show_all_objects(movies_col))
         choice = choicebox(msg="Pick a movie", choices=movies)
-        display_movie_box(choice, user_id)
+        if choice is not None:
+            display_movie_box(choice, user_id)
+        menu_box(user_id)
 
 
 def filter_box(user_id):
@@ -161,32 +163,6 @@ def filter_box(user_id):
     else:
         check_continue_browsing_box(user_id)
 
-        """new_cursor = f.showAllObjects(movies_col)
-        if "gatunek" in choices:
-            genre_list = multchoicebox("Wybierz gatunki", title, g.genres_set)
-            if genre_list is not None:
-                for genre in genre_list:
-                    new_cursor = f.findMovieByCategory(genre, new_movie_col)
-                    for object in new_cursor:
-        if "reżyser" in choices:
-            director = enterbox(msg="Podaj imię i nazwisko reżysera", title=title)
-            if director is not None:
-                new_movie_col = f.findMovieByDirector(director, new_movie_col)
-        if "rok produkcji" in choices:
-            if ynbox("Czy chcesz wybra rok produkcji jako przedział?", title):
-                year0 = integerbox("Podaj początek przedziału", title)
-                year = integerbox("Podaj koniec przedziału", title)
-                if year0 is not None and year is not None:
-                    new_movie_col = f.findovieByYearMargin(year0, year, new_movie_col)
-            else:
-                year = integerbox("Podaj rok", title)
-                new_movie_col = f.findovieByYear(year, new_movie_col)
-        movies = f.showAllObjects(new_movie_col)
-        choices = []
-        for movie in movies:
-            choices.append(movie["name"])
-        choice = choicebox(msg="Pick a movie", choices=choices)
-        display_movie_box(choice, user_id)"""
 
 
 def display_movie_box(movie_name, user_id):
