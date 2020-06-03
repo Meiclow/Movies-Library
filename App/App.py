@@ -173,19 +173,27 @@ def filter_box(user_id):
 
 def display_movie_box(movie_name, user_id):
     movie_cursor = f.find_object_by_name(movie_name, movies_col)
+    movie = movie_cursor[0];
+    genres = ""
+    for i in movie["genres"]:
+        genres += i
+        genres += ", "
+    rat = f.average_rating(movie["_id"], movies_col)
+    if rat is None:
+        rat = "Brak ocen"
+    else:
+        rat = "Średnia ocen: " + str(rat)
+    choice = buttonbox(movie["name"] + "\n" + "gatunki: " + genres + "\n" + "Reżyser: " + movie["director"] + "\n"
+                       + rat + "\n" + "Ilość recenzji: "
+                       + str(f.count_movie_reviews(movie["name"], movies_col, reviews_col)), title, ["Oceń", "Wyjdź"])
+    if choice == "Oceń":
+        add_review_box(movie_name, user_id)
+    else:
+        check_continue_browsing_box(user_id)
 
-    for movie in movie_cursor:
-        genres = ""
-        for i in movie["genres"]:
-            genres += i
-            genres += ", "
-        msgbox(movie["name"] + "\n" + "gatunki: " + genres + "\n" + "Reżyser: " + movie["director"] + "\n"
-               + "Rok produkcji: " + str(movie["year"]) + "\n" + "Średnia ocena: "
-               + str(f.average_rating(movie["_id"], movies_col))
-               + "\n" + "Ilość recenzji: " + str(f.count_movie_reviews(movie["name"], movies_col, reviews_col)))
-        break
 
-    check_continue_browsing_box(user_id)
+def add_review_box(movie_name, user_id):
+    print("add_review_box")
 
 
 def check_continue_browsing_box(user_id):
