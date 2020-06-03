@@ -137,14 +137,14 @@ def filter_box(user_id):
                 made_a_choice = False
         elif choice == "rok produkcji":
             if ynbox("Czy chcesz wybra rok produkcji jako przedział?", title):
-                year0 = integerbox("Podaj początek przedziału", title, lowerbound=1919, upperbound=2020)
-                year = integerbox("Podaj koniec przedziału", title, lowerbound=1919, upperbound=2020)
+                year0 = integerbox("Podaj początek przedziału", title, upperbound=10000)
+                year = integerbox("Podaj koniec przedziału", title, upperbound=10000)
                 if year0 is not None and year is not None:
                     movies = f.get_name_list_from_cursor(f.find_movie_by_year_margin(year0, year, movies_col))
                 else:
                     made_a_choice = False
             else:
-                year = integerbox("Podaj rok", title, lowerbound=1919, upperbound=2020)
+                year = integerbox("Podaj rok", title, upperbound=10000)
                 if year is not None:
                     movies = f.get_name_list_from_cursor(f.find_movie_by_year(year, movies_col))
                 else:
@@ -190,16 +190,22 @@ def display_movie_box(movie_name, user_id):
 
 def add_review_box(movie_id, user_id):
     rating = integerbox("Podaj jak oceniasz film w skali 1-5", lowerbound=1, upperbound=5)
-    add_review_box2(movie_id, user_id, rating)
+    if rating is not None:
+        add_review_box2(movie_id, user_id, rating)
+    else:
+        menu_box(user_id)
 
 
 def add_review_box2(movie_id, user_id, rating):
     text = enterbox("Co sądzisz o filmie?", title)
-    review = insert_review(rating, text, user_id, movie_id)
-    if not review:
-        review_exists(user_id)
+    if text is not None:
+        review = insert_review(rating, text, user_id, movie_id)
+        if not review:
+            review_exists(user_id)
+        else:
+            review_added(user_id, movie_id)
     else:
-        review_added(user_id, movie_id)
+        menu_box(user_id)
 
 
 def review_exists(user_id):
@@ -223,13 +229,6 @@ def reviews_of_movie_box(movie_name, user_id):
         for review in reviews:
             review_objects.append(review)
             review_names.append(f.get_name_of_object(review['user_id'], users_col))
-        """reviews_dic = {}
-        for i in range(reviews.count()):
-            name = "Recenzja " + str(i)
-            reviews_dic[name] = reviews[i]
-        review_names = []
-        for name in reviews_dic.keys():
-            review_names.append(name)"""
         choice = choicebox("Recenzje filmu:", title, review_names)
         review_box(user_id, review_objects[review_names.index(choice)], movie_name)
 
