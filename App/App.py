@@ -5,11 +5,15 @@ from easygui import *
 from Functionalities import Functions as f
 from Generator import Generator as g
 
+print("Connecting to client...")
 client = pymongo.MongoClient("mongodb://localhost:27017")
+print("Connected")
+print("Accessing data...")
 db = client["movies_library"]
 movies_col = db["movies"]
 reviews_col = db["reviews"]
 users_col = db["users"]
+print("Data accessed")
 title = "Biblioteka Filmowa"
 
 genres_set = ["Action", "Romance", "Horror", "Comedy", "Thriller", "Adventure", "Family", "Fantasy", "Thriller",
@@ -183,7 +187,7 @@ def display_movie_box(movie_name, user_id):
         rat = "Brak ocen"
     else:
         rat = "Średnia ocen: " + str(rat)
-    choice = buttonbox(movie["name"] + "\n" + "gatunki: " + genres + "\n" + "Reżyser: " + movie["director"] + "\n"
+    choice = buttonbox(movie["name"] + "\n" + "Gatunki: " + genres + "\n" + "Reżyser: " + movie["director"] + "\n"
                        + rat + "\n" + "Ilość recenzji: "
                        + str(f.count_movie_reviews(movie["name"], movies_col, reviews_col)), title, ["Oceń", "Wyjdź"])
     if choice == "Oceń":
@@ -204,7 +208,27 @@ def check_continue_browsing_box(user_id):
 
 
 def my_reviews_box(user_id):
-    print("my_reviews_box")
+    reviews = f.find_user_reviews(user_id, reviews_col)
+    reviews_names_obj = {}
+    for review in reviews:
+        movie_id = review["movie_id"]
+        reviews_names_obj[f.get_name_of_object(movie_id, movies_col)] = review
+    reviews_names = []
+    for name in reviews_names_obj.keys():
+        reviews_names.append(name)
+    choice = choicebox("Twoje oceny", title, reviews_names)
+    if choice is None:
+        msgbox("Nie oceniłeś/aś żadnych filmów", title)
+        menu_box(user_id)
+    else:
+        chosen_review = reviews_names_obj[choice]
+        review_box(user_id, chosen_review, choice)
+
+
+def review_box(user_id, review, movie_name):
+    msgbox("Tytuł: " + movie_name + "\n" + "Ocena: " + str(review["rating"]) + "\n" + "Recenzja: " + "\n" +
+           str(review["text"]), title)
+    menu_box(user_id)
 
 
 def add_movie_box(user_id):

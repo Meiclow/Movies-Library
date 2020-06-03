@@ -70,8 +70,7 @@ def find_movie_reviews(movie_name, movie_collection, review_collection):
     return review_collection.find({"movie": movie_id})
 
 
-def find_user_reviews(user_name, user_collection, review_collection):
-    user_id = get_id_of_object(user_name, user_collection)
+def find_user_reviews(user_id, review_collection):
     return review_collection.find({"user": user_id})
 
 
