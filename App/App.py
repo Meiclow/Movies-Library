@@ -2,8 +2,14 @@ import pymongo
 import time
 from easygui import *
 
+print("Importing libraries...")
+
 from Functionalities import Functions as f
+print("Imported Functions")
 from Generator import Generator as g
+print("Imported Generator")
+
+print("Imported")
 
 print("Connecting to client...")
 client = pymongo.MongoClient("mongodb://localhost:27017")
@@ -209,18 +215,18 @@ def check_continue_browsing_box(user_id):
 
 def my_reviews_box(user_id):
     reviews = f.find_user_reviews(user_id, reviews_col)
-    reviews_names_obj = {}
-    for review in reviews:
-        movie_id = review["movie_id"]
-        reviews_names_obj[f.get_name_of_object(movie_id, movies_col)] = review
-    reviews_names = []
-    for name in reviews_names_obj.keys():
-        reviews_names.append(name)
-    choice = choicebox("Twoje oceny", title, reviews_names)
-    if choice is None:
+    if len(reviews) == 0:
         msgbox("Nie oceniłeś/aś żadnych filmów", title)
         menu_box(user_id)
     else:
+        reviews_names_obj = {}
+        for review in reviews:
+            movie_id = review["movie_id"]
+            reviews_names_obj[f.get_name_of_object(movie_id, movies_col)] = review
+        reviews_names = []
+        for name in reviews_names_obj.keys():
+            reviews_names.append(name)
+        choice = choicebox("Twoje oceny", title, reviews_names)
         chosen_review = reviews_names_obj[choice]
         review_box(user_id, chosen_review, choice)
 
