@@ -189,7 +189,7 @@ def display_movie_box(movie_name, user_id):
 
 
 def add_review_box(movie_id, user_id):
-    rating = integerbox("Podaj jak oceniasz film w skali 1-5", lowerbound=1, upperbound=5)
+    rating = integerbox("Podaj jak oceniasz film w skali 1-5", title, lowerbound=1, upperbound=5)
     if rating is not None:
         add_review_box2(movie_id, user_id, rating)
     else:
