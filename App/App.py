@@ -155,7 +155,7 @@ def filter_box(user_id):
         if len(movies) == 1:
             display_movie_box(movies[0], user_id)
         elif len(movies) > 0:
-            choice = choicebox(msg="Wybierz film", title=title,choices=movies)
+            choice = choicebox(msg="Wybierz film", title=title, choices=movies)
             display_movie_box(choice, user_id)
         else:
             msgbox("Nie znaleziono filmów spełniających wybrane kryteria", title)
