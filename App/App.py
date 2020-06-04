@@ -109,7 +109,7 @@ def movies_box(user_id):
         filter_box(user_id)
     else:
         movies = f.get_name_list_from_cursor(f.show_all_objects(movies_col))
-        choice = choicebox(msg="Pick a movie", choices=movies)
+        choice = choicebox(msg="Wybierz film", title=title, choices=movies)
         if choice is not None:
             display_movie_box(choice, user_id)
         else:
@@ -155,7 +155,7 @@ def filter_box(user_id):
         if len(movies) == 1:
             display_movie_box(movies[0], user_id)
         elif len(movies) > 0:
-            choice = choicebox(msg="Pick a movie", choices=movies)
+            choice = choicebox(msg="Wybierz film", title=title,choices=movies)
             display_movie_box(choice, user_id)
         else:
             msgbox("Nie znaleziono filmów spełniających wybrane kryteria", title)
@@ -234,7 +234,7 @@ def reviews_of_movie_box(movie_name, user_id):
 
 
 def check_continue_browsing_box(user_id):
-    if ccbox("Do you want to continue browsing?"):
+    if ccbox("Czy chcesz wrócić do ekranu przeglądania filmów?", title):
         movies_box(user_id)
     else:
         menu_box(user_id)
